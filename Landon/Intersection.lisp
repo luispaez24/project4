@@ -1,8 +1,4 @@
-;; Return the intersection of set-1 and set-2.
-;; The result should contain no duplicates.
-;; Assume set-1 contains no duplicates and set-2 contains no duplicates.
-;; Examples:
-;;   (set-intersection '(1 2) '(2 4)) => '(2)
+;; Return the intersection of set-1 and set-2. The result should contain no duplicates.
 
 (defun member-equal (item lst)
   (if (equal lst nil)              ; Check if list is empty
@@ -15,7 +11,7 @@
   (member-equal item lst))  ; Check if item is in the list
 
 ;; Reverse function to fix format for running test cases
-;; the result appends to the front and messes with the unit testing
+;; without the reverse function, the result appends to the front and messes with the unit testing
 (defun reverse-list (lst)
   (labels ((reverse-helper (remaining result)
              (if (equal remaining nil)
@@ -34,10 +30,8 @@
                        (helper (cdr l1) l2 result))))))  ; Otherwise, continue with the rest of the list
     (reverse (helper set-1 set-2 nil))))  ; Call helper function with initial values
     
-
 ;; Test print the function
 (format t "Intersection ~A~%" (set-intersection '(1 2) '(2 4)))
-
 
 ;; Unit testing
 (defun run-tests ()
