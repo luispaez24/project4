@@ -28,9 +28,33 @@
 ;;  (boolean-eval '(and t (or nil t)) => t
 
 (defun boolean-eval (exp)
-
-;;<Your implementation go here >
-
+  (cond
+    ((or (equal exp t) (equal exp nil)) exp)
+    ((equal (car exp) 'not)
+     (not (boolean-eval (second exp))))
+    ((equal (car exp) 'and)
+     (let ((args (cdr exp)))
+       (cond ((null args) t)
+             ((equal (boolean-eval (car args)) nil) nil)
+             (t (boolean-eval (cons 'and (cdr args)))))))
+    ((equal (car exp) 'or)
+     (let ((args (cdr exp)))
+       (cond ((null args) nil)
+             ((equal (boolean-eval (car args)) t) t)
+             (t (boolean-eval (cons 'or (cdr args)))))))
+    ((equal (car exp) 'xor)
+     (let ((a (boolean-eval (second exp)))
+           (b (boolean-eval (third exp))))
+       (or (and a (not b))
+           (and (not a) b))))
+    ((equal (car exp) 'implies)
+     (let ((a (boolean-eval (second exp)))
+           (b (boolean-eval (third exp))))
+       (or (not a) b)))
+    ((equal (car exp) 'iff)
+     (boolean-iff (boolean-eval (second exp))
+                  (boolean-eval (third exp))))
+    (t nil))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
