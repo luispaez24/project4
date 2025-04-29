@@ -28,8 +28,47 @@
 
 ;;   (set-union '(1 2) '(2 4)) => '(1 2 4)
 
+(defun member-equal (item lst)
+       (if (equal lst nil)
+         nil
+         (if (equal item (car lst))
+           t
+           (member-equal item (cdr lst)))))
+
+(defun is-in? (item lst)
+       (member-equal item lst))
+
+(defun reverse-list (lst)
+       (labels ((reverse-helper (remaining result)
+                                (if (equal remaining nil)
+                                  result
+                                  (reverse-helper (cdr remaining) (cons (car remaining) result)))))
+               (reverse-helper lst nil)))
+
 (defun set-union (set-1 set-2)
+       (labels ((helper (l1 l2 result)
+                        (if (equal l1 nil)
+                          (append (reverse l2) result) ; Add remaining elements of l2
+                          (let ((item (car l1)))
+                               (if (not (is-in? item result)) ; Add if not already in result
+                                 (helper (cdr l1) l2 (cons item result))
+                                 (helper (cdr l1) l2 result))))))
+               (reverse (helper set-1 set-2 nil))))
 
-  ;;Your implementation go here
+;; Test print the function
+(format t "Union ~A~%" (set-union '(1 2) '(2 4)))
 
-)
+;; Unit testing for union
+(defun run-union-tests ()
+       (assert (equal (sort (set-union '(1 2 3) '(2 3 4))) '(1 2 3 4)) nil "Union Test case 1 failed")
+       (assert (equal (sort (set-union '(a b c) '(b c d))) '(a b c d)) nil "Union Test case 2 failed")
+       (assert (equal (sort (set-union '(1 2 3) '(4 5 6))) '(1 2 3 4 5 6)) nil "Union Test case 3 failed")
+       (assert (equal (sort (set-union '(1 2 3) '(2 3 3))) '(1 2 3)) nil "Union Test case 4 failed")
+       (assert (equal (sort (set-union '(1 2) '(1 2))) '(1 2)) nil "Union Test case 5 failed")
+       (assert (equal (sort (set-union '() '(2 4 6))) '(2 4 6)) nil "Union Test case 6 failed")
+       (assert (equal (sort (set-union '(1 2 3) '())) '(1 2 3)) nil "Union Test case 7 failed")
+
+       (format t "All union tests passed.~%"))
+
+;; Run the union tests
+(run-union-tests)

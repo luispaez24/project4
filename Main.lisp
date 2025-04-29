@@ -2,7 +2,28 @@
 ; ***** #1 Member of Set Function *****
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ***** #2 Union Function *****
+(defun member-equal (item lst)
+       (if (equal lst nil)
+         nil
+         (if (equal item (car lst))
+           t
+           (member-equal item (cdr lst)))))
 
+(defun is-in? (item lst)
+       (member-equal item lst))
+
+(defun set-union (set-1 set-2)
+       (labels ((helper (l1 l2 result)
+                        (if (equal l1 nil)
+                          (append (reverse l2) result)
+                          (let ((item (car l1)))
+                               (if (not (is-in? item result))
+                                 (helper (cdr l1) l2 (cons item result))
+                                 (helper (cdr l1) l2 result))))))
+               (reverse (helper set-1 set-2 nil))))
+
+;; Test print the function
+(format t "Union ~A~%" (set-union '(1 2) '(2 4)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ***** #3 Intersection Function ***** 
