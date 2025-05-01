@@ -55,8 +55,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ***** #3 Intersection Function ***** 
 (defun member-equal (item lst)
-  (if (equal lst nil)  
-      nil            
+  (if (equal lst nil)
+      nil
       (if (equal item (car lst))
           t
           (member-equal item (cdr lst)))))
@@ -64,7 +64,15 @@
 (defun is-in? (item lst)
   (member-equal item lst))
 
-(defun set-intersection (set-1 set-2)
+;; Reverse function to fix format for running test cases
+(defun reverse-list (lst)
+  (labels ((reverse-helper (remaining result)
+             (if (equal remaining nil)
+                 result
+                 (reverse-helper (cdr remaining) (cons (car remaining) result)))))
+    (reverse-helper lst nil)))
+
+(defun set-intersect (set-1 set-2)
   (labels ((helper (l1 l2 result)
              (if (equal l1 nil)
                  result
@@ -73,13 +81,45 @@
                             (not (is-in? item result)))
                        (helper (cdr l1) l2 (cons item result))
                        (helper (cdr l1) l2 result))))))
-    (helper set-1 set-2 nil)))
+    (reverse-list (helper set-1 set-2 nil))))
     
 ;; Test print the function
-(format t "Intersection ~A~%" (set-intersection '(1 2) '(2 4)))
+(format t "Intersection of (1 2 3) and (2 3): ~A~%" (set-intersect '(1 2 3) '(2 3)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ***** #4 Difference Function *****
+(defun member-equal (item lst)
+  (if (equal lst nil)
+      nil        
+      (if (equal item (car lst))
+          t
+          (member-equal item (cdr lst)))))
+
+(defun is-in? (item lst)
+  (member-equal item lst))
+
+
+(defun reverse-list (lst)
+  (labels ((reverse-helper (remaining result)
+             (if (equal remaining nil)
+                 result
+                 (reverse-helper (cdr remaining) (cons (car remaining) result)))))
+    (reverse-helper lst nil)))
+    
+
+(defun set-diff (set-1 set-2)
+  (labels ((helper (l1 l2 result)
+              (if (equal l1 nil)
+                  result
+                  (let ((item (car l1)))
+                    (if (not (member-equal item l2))
+                        (helper (cdr l1) l2 (cons item result))
+                        (helper (cdr l1) l2 result))))))
+                    
+    (reverse-list (helper set-1 set-2 nil))))
+
+
+(format t "Difference of (1 2) and (2 4): ~A~%" (set-diff '(1 2) '(2 4))) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ***** #5 Exclusive Function *****
