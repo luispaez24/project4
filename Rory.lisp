@@ -11,10 +11,30 @@
 ;;  (set-member '(1 2) 3) =>  NIL
 
 (defun set-member (set item)
+       "Returns T if item is a member of set, NIL otherwise.
+       The set is represented as a list."
+       (if (null set) ; If the set is empty
+         nil       ; item is not a member
+         (if (eql (car set) item) ; If the first element of the set is equal to the item
+           t       ; item is a member
+           (set-member (cdr set) item)))) ; Otherwise, check the rest of the set
 
-  ;;Your implementation go here
+(format t "Set-member '(1 2 3) 2: ~A~%" (set-member '(1 2 3) 2))
 
-)
+;;; Unit testing for set-member
+(defun run-set-member-tests ()
+       (assert (eql (set-member '(1 2 3) 2) t) nil "Set-member Test case 1 failed")
+       (assert (eql (set-member '(1 2 3) 4) nil) nil "Set-member Test case 2 failed")
+       (assert (eql (set-member '() 1) nil) nil "Set-member Test case 3 failed")
+       (assert (eql (set-member '(a b c) 'a) t) nil "Set-member Test case 4 failed")
+       (assert (eql (set-member '(a b c) 'c) t) nil "Set-member Test case 5 failed")
+       (assert (eql (set-member '(5) 5) t) nil "Set-member Test case 6 failed")
+       (assert (eql (set-member '(5) 6) nil) nil "Set-member Test case 7 failed")
+       (format t "All set-member tests passed.~%"))
+
+;; Run the set-member tests
+(run-set-member-tests)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -44,6 +64,7 @@
                                   result
                                   (reverse-helper (cdr remaining) (cons (car remaining) result)))))
                (reverse-helper lst nil)))
+
 
 (defun set-union (set-1 set-2)
        (labels ((helper (l1 l2 result)
