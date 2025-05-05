@@ -76,8 +76,21 @@
 ;;     (merge-sort '(2 1 5 0) #'>) => '(5 2 1 0)
 
 (defun merge-sort (list predicate)
-
-;;<Your implementation go here >
+  (labels ((merge-lists (left right)
+             (cond
+               ((null left) right)
+               ((null right) left)
+               ((funcall predicate (car left) (car right))
+                (cons (car left) (merge-lists (cdr left) right)))
+               (t
+                (cons (car right) (merge-lists left (cdr right)))))))
+    (if (or (null list) (null (cdr list)))
+        list
+        (let* ((mid (floor (length list) 2))
+               (left (subseq list 0 mid))
+               (right (subseq list mid)))
+          (merge-lists (merge-sort left predicate)
+                       (merge-sort right predicate))))))
 
 )
 
