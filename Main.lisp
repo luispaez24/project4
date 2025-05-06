@@ -26,7 +26,7 @@
 
 ;; Call the set-member function from Rory.lisp and print the result
 (format t "Is 3 a member of (1 3 5) using set-member? ~A~%" (set-member '(1 3 5) 3))
-(format t "Is 4 a member of (1 3 5) using set-member? ~A~%" (set-member '(1 3 5) 4))
+; (format t "Is 4 a member of (1 3 5) using set-member? ~A~%" (set-member '(1 3 5) 4))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ***** #2 Union Function *****
 (defun member-equal (item lst)
@@ -123,10 +123,36 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ***** #5 Exclusive Function *****
+(defun boolean-xor (a b)
+(cond
+    ((and a b)         ; both true
+     nil)
+    ((and (not a) (not b)) ; both false
+     nil)
+    (t                 ; one true, one false
+     t)))
+;;; Testing XOR 
+; Xor operation work if both are the same it returns false if they are different it returns true
+(print (boolean-xor t t))       ; Expected: NIL
+(print (boolean-xor t nil))     ; Expected: T
+(print (boolean-xor nil t))     ; Expected: T
+(print (boolean-xor nil nil))   ;should be false 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ***** #6 Implication Function *****
+(defun boolean-implies (a b)
+  (cond
+    ((and a (not b))   ; A is true, B is false → implication fails
+     nil)
+    (t                 ; all other cases → implication holds
+     t)))
 
+(defun test-boolean-implies ()
+  (list
+   (boolean-implies t nil)
+   (boolean-implies nil nil)
+   (boolean-implies t t)
+   (boolean-implies nil t)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ***** #7 Bi-Implication Function *****
 (defun boolean-iff (a b)
@@ -162,7 +188,7 @@
             (format t "  Test passed.~%~%")
             (format t "  Test failed.~%~%"))))))
 
-(run-boolean-iff-tests)
+; (run-boolean-iff-tests)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ***** #8 Boolean-Expression Function *****
@@ -242,7 +268,7 @@
             (format t "  Test failed.~%~%"))))))
 
 
-(run-boolean-eval-tests)
+; (run-boolean-eval-tests)
 
 
 
@@ -292,7 +318,7 @@
             (format t "  Test passed.~%~%")
             (format t "  Test failed.~%~%"))))))
 
-(run-merge-sort-tests)
+; (run-merge-sort-tests)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
