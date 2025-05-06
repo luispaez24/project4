@@ -93,3 +93,79 @@
                        (merge-sort right predicate))))))
 
 
+(defun run-boolean-eval-tests ()
+  (format t "~%Running boolean-eval tests...~%~%")
+  
+  (let ((test-cases
+         '((("Simple AND" (boolean-eval '(and t t))) . t)
+           (("AND with false" (boolean-eval '(and t nil))) . nil)
+           (("Nested OR" (boolean-eval '(or nil (or nil t)))) . t)
+           (("NOT true" (boolean-eval '(not t))) . nil)
+           (("NOT false" (boolean-eval '(not nil))) . t)
+           (("XOR true/false" (boolean-eval '(xor t nil))) . t)
+           (("XOR false/false" (boolean-eval '(xor nil nil))) . nil)
+           (("IMPLIES t -> nil" (boolean-eval '(implies t nil))) . nil)
+           (("IMPLIES nil -> t" (boolean-eval '(implies nil t))) . t)
+           (("IFF t t" (boolean-eval '(iff t t))) . t)
+           (("IFF t nil" (boolean-eval '(iff t nil))) . nil)
+           (("Complex expr" (boolean-eval '(and (or nil t) (not nil)))) . t)
+           
+           ;; Advanced/Harder test cases
+           (("Deep nesting" 
+             (boolean-eval '(and (or nil (not (not t))) (implies t (or nil t))))) 
+            . t)
+
+           (("XOR inside AND" 
+             (boolean-eval '(and (xor t nil) (xor nil nil)))) 
+            . nil)
+
+           (("IFF with nested expressions" 
+             (boolean-eval '(iff (and t t) (or nil t)))) 
+            . t)
+
+           (("Implies false premise" 
+             (boolean-eval '(implies (and nil t) t))) 
+            . t))))
+    
+    (dolist (test test-cases)
+      (let* ((label (caar test))
+             (form (cadar test))
+             (expected (cdr test))
+             (result (eval form)))
+        (format t "~A~%  Result:   ~A~%  Expected: ~A~%" label result expected)
+        (if (equal result expected)
+            (format t "  Test passed.~%~%")
+            (format t "  Test failed.~%~%"))))))
+
+
+(run-boolean-eval-tests)
+
+
+(defun run-merge-sort-tests ()
+  (format t "~%Running merge-sort tests...~%~%")
+
+  (let ((test-cases
+         '((("Ascending sort" (merge-sort '(3 1 4 1 5 9 2 6) #'<)) . (1 1 2 3 4 5 6 9))
+           (("Descending sort" (merge-sort '(3 1 4 1 5 9 2 6) #'>)) . (9 6 5 4 3 2 1 1))
+           (("Empty list" (merge-sort '() #'<)) . ())
+           (("Single element" (merge-sort '(42) #'<)) . (42))
+           (("All same" (merge-sort '(7 7 7 7) #'<)) . (7 7 7 7))
+           (("Already sorted" (merge-sort '(1 2 3 4 5) #'<)) . (1 2 3 4 5))
+           (("Reverse sorted" (merge-sort '(5 4 3 2 1) #'<)) . (1 2 3 4 5))
+           (("With negative numbers" (merge-sort '(-3 -1 -7 2 0) #'<)) . (-7 -3 -1 0 2))
+           (("With mixed signs" (merge-sort '(-1 0 1 -2 2) #'<)) . (-2 -1 0 1 2))
+           (("Short descending" (merge-sort '(2 1) #'>)) . (2 1))
+           (("Short ascending" (merge-sort '(2 1) #'<)) . (1 2))
+           (("Duplicates in reverse" (merge-sort '(5 5 3 3 1 1) #'<)) . (1 1 3 3 5 5)))))
+    
+    (dolist (test test-cases)
+      (let* ((label (caar test))
+             (form (cadar test))
+             (expected (cdr test))
+             (result (eval form)))
+        (format t "~A~%  Result:   ~A~%  Expected: ~A~%" label result expected)
+        (if (equal result expected)
+            (format t "  Test passed.~%~%")
+            (format t "  Test failed.~%~%"))))))
+
+(run-merge-sort-tests)
