@@ -92,5 +92,4 @@
           (merge-lists (merge-sort left predicate)
                        (merge-sort right predicate))))))
 
-)
 
