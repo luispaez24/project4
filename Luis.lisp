@@ -8,11 +8,17 @@
 
 ;;  (boolean-xor nil nil) => nil
 
-(defun boolean-xor (a b)
+;;(defun boolean-xor (a b)
 
   ;;Your implementation go here
 
-)
+  (defun boolean-xor (a b)
+  (if (equal a b)
+      nil
+      t)),
+
+;;)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
