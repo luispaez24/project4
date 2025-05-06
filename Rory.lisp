@@ -11,13 +11,13 @@
 ;;  (set-member '(1 2) 3) =>  NIL
 
 (defun set-member (set item)
-       "Returns T if item is a member of set, NIL otherwise.
-       The set is represented as a list."
-       (if (null set) ; If the set is empty
-         nil       ; item is not a member
-         (if (eql (car set) item) ; If the first element of the set is equal to the item
-           t       ; item is a member
-           (set-member (cdr set) item)))) ; Otherwise, check the rest of the set
+       "Returns T if item is a member of set using EQUAL, NIL otherwise.
+        Compliant with the restricted function list."
+       (if (equal set nil) ;; Replaced NULL with EQUAL check against NIL
+         nil
+         (if (equal (car set) item) ;; Replaced EQL with EQUAL
+           t
+           (set-member (cdr set) item))))
 
 (format t "Set-member '(1 2 3) 2: ~A~%" (set-member '(1 2 3) 2))
 
@@ -48,15 +48,6 @@
 
 ;;   (set-union '(1 2) '(2 4)) => '(1 2 4)
 
-(defun member-equal (item lst)
-       (if (equal lst nil)
-         nil
-         (if (equal item (car lst))
-           t
-           (member-equal item (cdr lst)))))
-
-(defun is-in? (item lst)
-       (member-equal item lst))
 
 (defun reverse-list (lst)
        (labels ((reverse-helper (remaining result)
@@ -66,15 +57,35 @@
                (reverse-helper lst nil)))
 
 
+(defun member-equal-custom (item lst)
+       (if (equal lst nil)
+         nil
+         (if (equal item (car lst))
+           t
+           (member-equal-custom item (cdr lst)))))
+
+
 (defun set-union (set-1 set-2)
-       (labels ((helper (l1 l2 result)
-                        (if (equal l1 nil)
-                          (append (reverse l2) result) ; Add remaining elements of l2
-                          (let ((item (car l1)))
-                               (if (not (is-in? item result)) ; Add if not already in result
-                                 (helper (cdr l1) l2 (cons item result))
-                                 (helper (cdr l1) l2 result))))))
-               (reverse (helper set-1 set-2 nil))))
+       (labels (
+
+                (process-list (source accumulator)
+                              (if (equal source nil) ;; Use 'equal' to check for empty list
+                                accumulator
+                                (let ((item (car source)))
+                                     ;; Use the custom membership check tool
+                                     (if (not (member-equal-custom item accumulator))
+                                       ;; If not already present, add to accumulator (at front)
+                                       (process-list (cdr source) (cons item accumulator))
+                                       ;; If already present, skip and process rest of source
+                                       (process-list (cdr source) accumulator))))))
+
+               (let ((unique-elements (process-list set-1 nil)))
+
+                    (let ((final-reversed-result (process-list set-2 unique-elements)))
+                         ;; 3. Reverse the final list using the allowed reverse-list tool
+                         (reverse-list final-reversed-result))))
+
+
 
 ;; Test print the function
 (format t "Union ~A~%" (set-union '(1 2) '(2 4)))
