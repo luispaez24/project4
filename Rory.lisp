@@ -66,41 +66,36 @@
 
 
 (defun set-union (set-1 set-2)
-       (labels (
+  (labels ((process-list (source accumulator)
+             (if (equal source nil)
+                 accumulator
+                 (let ((item (car source)))
+                   (if (not (member-equal-custom item accumulator))
+                       (process-list (cdr source) (cons item accumulator))
+                       (process-list (cdr source) accumulator)))))
+           )
+    (let ((unique-elements (process-list set-1 nil)))
+      (let ((final-reversed-result (process-list set-2 unique-elements)))
+        (reverse-list final-reversed-result)))))
 
-                (process-list (source accumulator)
-                              (if (equal source nil) ;; Use 'equal' to check for empty list
-                                accumulator
-                                (let ((item (car source)))
-                                     ;; Use the custom membership check tool
-                                     (if (not (member-equal-custom item accumulator))
-                                       ;; If not already present, add to accumulator (at front)
-                                       (process-list (cdr source) (cons item accumulator))
-                                       ;; If already present, skip and process rest of source
-                                       (process-list (cdr source) accumulator))))))
-
-               (let ((unique-elements (process-list set-1 nil)))
-
-                    (let ((final-reversed-result (process-list set-2 unique-elements)))
-                         ;; 3. Reverse the final list using the allowed reverse-list tool
-                         (reverse-list final-reversed-result))))
 
 
 
 ;; Test print the function
 (format t "Union ~A~%" (set-union '(1 2) '(2 4)))
 
-;; Unit testing for union
 (defun run-union-tests ()
-       (assert (equal (sort (set-union '(1 2 3) '(2 3 4))) '(1 2 3 4)) nil "Union Test case 1 failed")
-       (assert (equal (sort (set-union '(a b c) '(b c d))) '(a b c d)) nil "Union Test case 2 failed")
-       (assert (equal (sort (set-union '(1 2 3) '(4 5 6))) '(1 2 3 4 5 6)) nil "Union Test case 3 failed")
-       (assert (equal (sort (set-union '(1 2 3) '(2 3 3))) '(1 2 3)) nil "Union Test case 4 failed")
-       (assert (equal (sort (set-union '(1 2) '(1 2))) '(1 2)) nil "Union Test case 5 failed")
-       (assert (equal (sort (set-union '() '(2 4 6))) '(2 4 6)) nil "Union Test case 6 failed")
-       (assert (equal (sort (set-union '(1 2 3) '())) '(1 2 3)) nil "Union Test case 7 failed")
+  ;; Numeric sets (use <)
+  (assert (equal (sort (copy-list (set-union '(1 2 3) '(2 3 4))) #'<) '(1 2 3 4)) nil "Union Test case 1 failed")
+  (assert (equal (sort (copy-list (set-union '(1 2 3) '(4 5 6))) #'<) '(1 2 3 4 5 6)) nil "Union Test case 3 failed")
+  (assert (equal (sort (copy-list (set-union '(1 2 3) '(2 3 3))) #'<) '(1 2 3)) nil "Union Test case 4 failed")
+  (assert (equal (sort (copy-list (set-union '(1 2) '(1 2))) #'<) '(1 2)) nil "Union Test case 5 failed")
+  (assert (equal (sort (copy-list (set-union '() '(2 4 6))) #'<) '(2 4 6)) nil "Union Test case 6 failed")
+  (assert (equal (sort (copy-list (set-union '(1 2 3) '())) #'<) '(1 2 3)) nil "Union Test case 7 failed")
 
-       (format t "All union tests passed.~%"))
+  ;; Symbolic sets (use string<)
+  (assert (equal (sort (copy-list (set-union '(a b c) '(b c d))) #'string<) '(a b c d)) nil "Union Test case 2 failed")
 
-;; Run the union tests
+  (format t "All union tests passed.~%"))
+
 (run-union-tests)
